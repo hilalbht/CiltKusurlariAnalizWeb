@@ -1,0 +1,120 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMayQSqRoNbWbg8JABdEKpf",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/hilalbht/CiltKusurlariAnalizWeb/blob/main/FitnessFuncipynb\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": 1,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "cQC0Zf7YECRv",
+        "outputId": "5c7d663c-0793-4390-a502-de4254847338"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Mükemmel bir çözümün uygunluğu: 28\n",
+            "10 genotipten oluşan bir popülasyon oluşturuldu.\n",
+            "Popülasyondaki ilk genotip: [3, 4, 8, 1, 6, 5, 2, 7]\n",
+            "\n",
+            "İlk 3 genotipin uygunluk değerleri:\n",
+            "[3, 4, 8, 1, 6, 5, 2, 7] -> fitness: 23\n",
+            "[4, 1, 8, 3, 6, 5, 7, 2] -> fitness: 22\n",
+            "[6, 8, 5, 2, 7, 1, 4, 3] -> fitness: 24\n"
+          ]
+        }
+      ],
+      "source": [
+        "import random\n",
+        "\n",
+        "# ------------------------------------------------------\n",
+        "# Bölüm 1: Uygunluk Fonksiyonu\n",
+        "# ------------------------------------------------------\n",
+        "def calculate_fitness(genotype):\n",
+        "    \"\"\"\n",
+        "    Verilen genotipin uygunluk değerini hesaplar.\n",
+        "    Uygunluk = saldırmayan vezir çiftlerinin sayısı\n",
+        "    Maksimum değer = 28\n",
+        "    \"\"\"\n",
+        "    n = len(genotype)\n",
+        "    total_pairs = (n * (n - 1)) // 2  # 8 vezir için toplam çift sayısı = 28\n",
+        "    attacking_pairs = 0\n",
+        "\n",
+        "    # Her iki veziri karşılaştır\n",
+        "    for i in range(n):\n",
+        "        for j in range(i + 1, n):\n",
+        "            # Eğer aynı çapraz üzerindelerse saldırı vardır\n",
+        "            if abs(i - j) == abs(genotype[i] - genotype[j]):\n",
+        "                attacking_pairs += 1\n",
+        "\n",
+        "    # Saldırmayan çift sayısı = toplam çift - saldıran çift\n",
+        "    fitness = total_pairs - attacking_pairs\n",
+        "    return fitness\n",
+        "\n",
+        "\n",
+        "# ------------------------------------------------------\n",
+        "# Bölüm 2: Başlangıç Popülasyonu Oluşturma\n",
+        "# ------------------------------------------------------\n",
+        "def generate_population(size=100):\n",
+        "    \"\"\"\n",
+        "    Verilen boyutta (size) rastgele genotiplerden oluşan popülasyon oluşturur.\n",
+        "    Her genotip, [1, 2, 3, 4, 5, 6, 7, 8] sayılarının bir permütasyonudur.\n",
+        "    \"\"\"\n",
+        "    population = []\n",
+        "    for _ in range(size):\n",
+        "        genotype = [1, 2, 3, 4, 5, 6, 7, 8]\n",
+        "        random.shuffle(genotype)\n",
+        "        population.append(genotype)\n",
+        "    return population\n",
+        "\n",
+        "\n",
+        "# ------------------------------------------------------\n",
+        "# Test Bölümü\n",
+        "# ------------------------------------------------------\n",
+        "if __name__ == \"__main__\":\n",
+        "\n",
+        "    perfect_solution = [4, 2, 7, 3, 6, 8, 5, 1]\n",
+        "    fitness = calculate_fitness(perfect_solution)\n",
+        "    print(f\"Mükemmel bir çözümün uygunluğu: {fitness}\")  # Beklenen: 28\n",
+        "\n",
+        "    # Başlangıç popülasyonu oluştur\n",
+        "    initial_population = generate_population(10)\n",
+        "    print(f\"{len(initial_population)} genotipten oluşan bir popülasyon oluşturuldu.\")\n",
+        "    print(\"Popülasyondaki ilk genotip:\", initial_population[0])\n",
+        "\n",
+        "    # Popülasyondaki ilk 3 genotipin uygunluklarını gösterelim\n",
+        "    print(\"\\nİlk 3 genotipin uygunluk değerleri:\")\n",
+        "    for i in range(3):\n",
+        "        print(initial_population[i], \"-> fitness:\", calculate_fitness(initial_population[i]))\n"
+      ]
+    }
+  ]
+}
